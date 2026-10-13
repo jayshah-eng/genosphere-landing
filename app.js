@@ -126,13 +126,6 @@ function shade(hex,amt){let n=parseInt(hex.slice(1),16),r=(n>>16)+amt,g=((n>>8)&
   r=clamp(0,255,r);g=clamp(0,255,g);b=clamp(0,255,b);return '#'+((1<<24)+(r<<16)+(g<<8)+b).toString(16).slice(1);}
 function condR(c){return clamp(5,18,0.039*Math.sqrt(c.count));}
 
-/* pack centered at origin */
-function pack(items,gap){gap=gap||2.6;const placed=[];items.forEach(it=>{const r=it.r;if(!placed.length){placed.push({...it,x:0,y:0});return;}
-  let best={x:0,y:0},step=r*0.5+2;for(let a=0;a<2600;a++){const an=.5*a,rd=step*Math.sqrt(a),x=Math.cos(an)*rd,y=Math.sin(an)*rd;
-    let ok=true;for(const p of placed){if(Math.hypot(x-p.x,y-p.y)<r+p.r+gap){ok=false;break;}}if(ok){best={x,y};break;}}
-  placed.push({...it,x:best.x,y:best.y});});
-  let a=1e9,b=1e9,c=-1e9,d=-1e9;placed.forEach(p=>{a=Math.min(a,p.x-p.r);b=Math.min(b,p.y-p.r);c=Math.max(c,p.x+p.r);d=Math.max(d,p.y+p.r);});
-  const cx=(a+c)/2,cy=(b+d)/2;placed.forEach(p=>{p.x-=cx;p.y-=cy;});return {placed,w:c-a,h:d-b};}
 function helixPath(x1,y1,x2,y2,amp,ph){const dx=x2-x1,dy=y2-y1,L=Math.hypot(dx,dy)||1,ux=dx/L,uy=dy/L,px=-uy,py=ux;
   const turns=Math.max(2,Math.round(L/30)),seg=Math.max(16,turns*7);let d="";
   for(let i=0;i<=seg;i++){const t=i/seg,bx=x1+dx*t,by=y1+dy*t,off=Math.sin(t*turns*6.2832+ph)*amp,x=bx+px*off,y=by+py*off;d+=(i?"L":"M")+x.toFixed(1)+" "+y.toFixed(1);}return d;}
@@ -202,7 +195,6 @@ function render(){
   const host=document.getElementById('svgHost');host.classList.add('swap');
   setTimeout(()=>{host.innerHTML=svg;host.classList.remove('swap');applyZoom();bindWeb();applySearch(document.getElementById('mapSearch').value);},80);
 }
-function shorten(n,m){return n.length>m?n.slice(0,m-1)+'…':n;}
 function aK(n){return n>=1000?(n/1000).toFixed(n<10000?1:0)+'K':''+n;}
 function wrapLabel(s,m){const w=s.split(' '),lines=[];let cur='';
   for(const word of w){if(((cur+' '+word).trim()).length<=m){cur=(cur+' '+word).trim();}else{if(cur)lines.push(cur);cur=word;}if(lines.length>=2){break;}}
@@ -256,7 +248,7 @@ function renderBars(){let h='<div class="bars">';
     list.forEach(c=>{h+=`<div class="bar-row" data-name="${esc(c.name)}" onclick="openDrawer('${esc(c.name).replace(/'/g,"\\'")}')">
       <span class="bar-name">${esc(c.name)}</span><span class="bar-track"><span class="bar-fill" style="width:${Math.max(2,c.count/mx*100)}%;background:${sc}"></span></span>
       <span class="bar-val num">${fmt(c.count)}</span></div>`;});});});
-  h+='</div>';const host=document.getElementById('svgHost');host.innerHTML=h;host.querySelectorAll&&applySearch(document.getElementById('mapSearch').value);}
+  h+='</div>';document.getElementById('svgHost').innerHTML=h;applySearch(document.getElementById('mapSearch').value);}
 function setView(v){document.getElementById('viewMap').setAttribute('aria-pressed',v==='map');document.getElementById('viewBars').setAttribute('aria-pressed',v==='bars');
   if(v==='bars'){state={level:'bars'};document.getElementById('backChip').style.display='none';document.getElementById('stageTitle').textContent='Every condition, ranked by participants';renderBars();}
   else toOverview();}
@@ -295,7 +287,7 @@ document.addEventListener('keydown',e=>{if(e.key==='Escape'){closeDrawer();toggl
    <div class="cond"><div class="cn">${l.cond}</div><div class="cc num">${fmt(l.cc)} in cohort</div></div><div class="lk-note">${l.line}</div>`;
   el.onclick=()=>{const c=COND.find(x=>x.gene===l.gene);if(c)openDrawer(c.name);};host.appendChild(el);});})();
 
-/* clinico-genomic orbit (faster) */
+/* clinicogenomic orbit */
 const CGL={genomics:{t:"Genomics",d:"Clinical-grade exome across 6,000 genes.",c:"#8c94ad"},ehr:{t:"EHR",d:"Diagnoses, lab results and medications over time.",c:"#7ebc74"},claims:{t:"Claims",d:"Utilization signals beyond a single health system.",c:"#5fb0bf"},notes:{t:"Unstructured data",d:"Free-text clinical notes, newly linked.",c:"#e6799a"}};
 const cgKeys=Object.keys(CGL);
 (function(){const CX=180,CY=150,RR=92,L=[],N=[];cgKeys.forEach((k,i)=>{const a=(-90+i*90)*Math.PI/180,x=CX+Math.cos(a)*RR,y=CY+Math.sin(a)*RR,col=CGL[k].c;
@@ -311,7 +303,7 @@ document.querySelectorAll('#cgLayers .layer').forEach(l=>l.addEventListener('cli
 document.querySelectorAll('#orbit .onode').forEach(n=>n.addEventListener('click',()=>cgSet(n.dataset.k,true)));
 cgSet('genomics');
 
-/* longitudinal (faster) */
+/* longitudinal */
 const DOM={dx:{k:"Diagnoses",h:"ICD-10 condition history",ex:'<span class="num">E11.9</span> Type 2 diabetes &middot; <span class="num">I10</span> Hypertension &middot; <span class="num">N18.3</span> CKD stage 3, with onset dates across years.'},
   labs:{k:"Lab results",h:"Serial quantitative measurements",ex:'HbA1c <span class="num">7.8%</span> to <span class="num">6.9%</span> to <span class="num">6.4%</span> over three years. eGFR, lipids and more, tracked over time.'},
   meds:{k:"Medications",h:"RxNorm prescribing and exposure",ex:'Metformin, then a GLP-1 receptor agonist added, with start and stop dates and dose changes over time.'},
@@ -323,13 +315,13 @@ document.querySelectorAll('#domains .dom').forEach(d=>d.addEventListener('click'
 domSet('dx');
 
 /* resources */
-const RES=[{kind:"Blog",t:"Inside GenoSphere",d:"How we build and curate the clinico-genomic dataset.",g:"linear-gradient(135deg,#2b3356,#161b33)"},
+const RES=[{kind:"Blog",t:"Inside GenoSphere",d:"How we build and curate the clinicogenomic dataset.",g:"linear-gradient(135deg,#2b3356,#161b33)"},
  {kind:"Partner story",t:"From hypothesis to cohort",d:"A biopharma team validates a target in weeks, not months.",g:"linear-gradient(135deg,#223b2b,#161b33)"},
  {kind:"Cohort profile",t:"Neurology cohort",d:"309,762 participants across neurodegeneration and psychiatry.",g:"linear-gradient(135deg,#3a2b4a,#161b33)"},
  {kind:"Webinar",t:"GenoSphere webinar",d:"A live walkthrough of the dataset and Explorer.",g:"linear-gradient(135deg,#2b3a4a,#161b33)"}];
 (function(){const host=document.getElementById('resCards');RES.forEach(r=>{const el=document.createElement('a');el.className='rc';el.href='#';el.setAttribute('role','button');
   el.innerHTML=`<div class="rtop" style="background:${r.g}"><span class="rkind">${r.kind}</span></div><div class="rbody"><div class="rt">${r.t}</div><div class="rd">${r.d}</div><div class="rcta">Coming soon</div></div>`;
-  el.addEventListener('click',e=>{e.preventDefault();alert('Resource placeholder: '+r.kind+' — "'+r.t+'". Link this card to the real '+r.kind.toLowerCase()+' when published.');});host.appendChild(el);});})();
+  el.addEventListener('click',e=>{e.preventDefault();alert('Resource placeholder: '+r.kind+' "'+r.t+'". Link this card to the real '+r.kind.toLowerCase()+' when published.');});host.appendChild(el);});})();
 
 /* count-up */
 const reduce=window.matchMedia('(prefers-reduced-motion:reduce)').matches;
@@ -357,7 +349,7 @@ ev.addEventListener('click',playExplorer);ev.addEventListener('keydown',e=>{if(e
   hero.addEventListener('mousemove',e=>{const rc=hero.getBoundingClientRect();mouse.x=e.clientX-rc.left;mouse.y=e.clientY-rc.top;});hero.addEventListener('mouseleave',()=>{mouse.x=-999;mouse.y=-999;});
   let rt;window.addEventListener('resize',()=>{clearTimeout(rt);rt=setTimeout(()=>{if(raf)cancelAnimationFrame(raf);size();reduce?stat():frame();},180);});size();reduce?stat():frame();})();
 
-/* autoplay loops, faster */
+/* autoplay loops */
 if(!reduce){
   new IntersectionObserver(es=>es.forEach(en=>{if(en.isIntersecting&&!cgTimer){cgTimer=setInterval(()=>{cgIdx=(cgIdx+1)%cgKeys.length;cgSet(cgKeys[cgIdx]);},1500);}else if(!en.isIntersecting&&cgTimer){clearInterval(cgTimer);cgTimer=null;}}),{threshold:.3}).observe(document.getElementById('model'));
   new IntersectionObserver(es=>es.forEach(en=>{if(en.isIntersecting&&!domTimer){domTimer=setInterval(()=>{domIdx=(domIdx+1)%domKeys.length;domSet(domKeys[domIdx]);},1600);}else if(!en.isIntersecting&&domTimer){clearInterval(domTimer);domTimer=null;}}),{threshold:.3}).observe(document.getElementById('longitudinal'));
