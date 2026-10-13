@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GenoSphere | Helix Life Sciences</title>
+<meta name="description" content="GenoSphere is Helix's real-world clinico-genomic dataset: clinical-grade exomes linked to longitudinal health records across 560,000+ participants.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@400;700;900&family=Mulish:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<header class="nav"><div class="nav-inner">
+  <a class="brand" href="#" aria-label="Helix GenoSphere home">
+    <svg class="mark" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 3c3 2.2 9 2.2 12 0M6 21c3-2.2 9-2.2 12 0M6 3c0 6 12 12 12 18M18 3c0 6-12 12-12 18" stroke="#fff" stroke-width="1.6" stroke-linecap="round"/></svg>
+    <span>Helix GenoSphere<sup>&reg;</sup></span></a>
+  <nav class="nav-links" aria-label="Primary">
+    <a href="#data">The data</a><a href="#landscape">Landscape</a><a href="#model">What it is</a><a href="#explorer">Explorer</a><a href="#resources">Resources</a>
+    <a class="nav-cta" href="#contact">Connect with us</a></nav>
+</div></header>
+
+<section class="hero" id="top">
+  <canvas id="net" aria-hidden="true"></canvas>
+  <div class="wrap"><div class="hero-copy">
+    <span class="live"><span class="dot" aria-hidden="true"></span>Clinico-genomic data at population scale</span>
+    <h1>See the genome and the <span class="thin">clinic together.</span></h1>
+    <p class="hero-lede">GenoSphere is Helix's real-world <b>clinico-genomic</b> dataset: clinical-grade exomes from more than 560,000 consented participants, linked to their longitudinal electronic health records.</p>
+    <p class="hero-lede">Clinico-genomic data pairs each person's genome with their real-world clinical journey, the diagnoses, lab trends, medications, and notes that accumulate over years, so you can move from a genetic signal to its clinical consequence inside a single dataset.</p>
+    <div class="hero-actions"><a class="btn btn-pri" href="#contact">Connect with us</a><a class="btn btn-ghost" href="#landscape">Explore the landscape</a></div>
+  </div></div>
+  <a class="hero-scroll" href="#data" aria-label="Scroll down"><span>Explore</span><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+</section>
+
+<section class="sec" id="data"><div class="wrap">
+  <div class="sec-tag">The data keeps growing</div>
+  <h2>Depth you can query, and more of it every quarter.</h2>
+  <p class="lede">GenoSphere grows along three lines at once: the number of participants, the genomic resolution we can read, and the depth of clinical history linked to each person.</p>
+  <div class="readout" id="readout">
+    <div class="ro"><div class="n num" data-to="560" data-suffix="K+">0</div><div class="l">Participants with clinical-grade exome sequencing</div></div>
+    <div class="ro"><div class="n num" data-to="6000">0</div><div class="l">Genes with participant-level variant data</div></div>
+    <div class="ro"><div class="n num" data-to="13" data-suffix="+ yrs">0</div><div class="l">Of longitudinal clinical history, at its deepest<span style="color:var(--pink)">*</span></div></div>
+  </div>
+  <div class="ancestry"><span class="lab">Ancestry represented</span>
+    <span class="anc">European</span><span class="anc">African</span><span class="anc">East Asian</span><span class="anc">South Asian</span><span class="anc">Americas</span><span class="anc">Other</span></div>
+  <p class="depth-note"><span style="color:var(--pink)">*</span> Longitudinal depth is drawn from curated records and varies by participant, from multi-year histories to none. Genomic data refreshes weekly; linked clinical data refreshes quarterly.</p>
+</div></section>
+
+<section class="sec landscape" id="landscape"><div class="wrap">
+  <div class="ls-head">
+    <div><div class="sec-tag">Explore the dataset</div><h2>The therapeutic-area landscape.</h2>
+      <p class="lede">GenoSphere at the center. Click a therapeutic area, then a specialty, to open its conditions as a web. Select any disease for its clinico-genomic detail.</p></div>
+    <div class="ls-controls">
+      <input class="map-search" id="mapSearch" type="search" placeholder="Find a condition" aria-label="Search conditions">
+      <div class="seg" role="group" aria-label="View"><button id="viewMap" aria-pressed="true" onclick="setView('map')">Web</button><button id="viewBars" aria-pressed="false" onclick="setView('bars')">Ranked</button></div>
+    </div>
+  </div>
+  <div class="stage">
+    <div class="stage-bar">
+      <button class="back-chip" id="backChip" onclick="goBack()"><svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M15 6l-6 6 6 6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg><span id="backLabel">Back</span></button>
+      <div class="stage-title" id="stageTitle">Click a therapeutic area to open it</div>
+    </div>
+    <div id="svgHost"></div>
+    <div class="map-legend">
+      <div class="leg-title">CONDITION NODE SIZE = PARTICIPANTS</div>
+      <div class="leg-row"><div class="leg-dot" style="width:8px;height:8px"></div><div class="leg-text">under 1,000</div></div>
+      <div class="leg-row"><div class="leg-dot" style="width:13px;height:13px"></div><div class="leg-text">1,000 to 10,000</div></div>
+      <div class="leg-row"><div class="leg-dot" style="width:19px;height:19px"></div><div class="leg-text">10,000 to 50,000</div></div>
+      <div class="leg-row"><div class="leg-dot" style="width:26px;height:26px"></div><div class="leg-text">over 50,000</div></div>
+      <div class="leg-hint">Click area, then specialty, then condition</div>
+    </div>
+    <div class="map-stats"><div class="ms-n num">533,825</div><div class="ms-l">Participants</div><div class="ms-n num">65</div><div class="ms-l">Conditions</div></div>
+    <div class="zoom-ctrl">
+      <button class="zoom-btn" id="zIn" title="Zoom in" aria-label="Zoom in">+</button>
+      <button class="zoom-btn" id="zOut" title="Zoom out" aria-label="Zoom out">&minus;</button>
+      <button class="zoom-btn" id="zReset" title="Reset view" aria-label="Reset view">&#9673;</button>
+      <button class="zoom-btn" id="zHelp" title="How to use" aria-label="How to use">?</button>
+    </div>
+    <div class="tut" id="tut"><div class="tut-card">
+      <h4>How to explore the landscape</h4>
+      <div class="tut-step"><span class="tn">1</span><span class="tt">Click a <b>therapeutic area</b> around GenoSphere to open its specialties.</span></div>
+      <div class="tut-step"><span class="tn">2</span><span class="tt">Click a <b>specialty</b> to reveal its conditions as a web.</span></div>
+      <div class="tut-step"><span class="tn">3</span><span class="tt">Click a <b>condition</b> for its description, participant count, and linked genomics.</span></div>
+      <div class="tut-step"><span class="tn">+</span><span class="tt">Use <b>+ / &minus;</b> to zoom and drag to pan. Node size shows participant count.</span></div>
+      <button class="tut-close" onclick="toggleTut(false)">Got it</button>
+    </div></div>
+  </div>
+  <div class="ls-foot"><span><span class="asof">HRN cohort</span>, excluding Anuva &middot; export 12 Oct 2026</span><span>Counts are participants with the condition in linked records</span></div>
+</div></section>
+
+<section class="sec alt" id="model"><div class="wrap">
+  <div class="sec-tag">What GenoSphere is</div>
+  <h2>Clinico-genomic data, four layers deep.</h2>
+  <p class="lede">GenoSphere links each participant's genome to the real-world evidence that surrounds it. Together they form a clinico-genomic record: genetics read alongside the clinical life it plays out in.</p>
+  <div class="cg">
+    <div class="cg-layers" id="cgLayers">
+      <button class="layer" data-k="genomics" aria-current="true"><span class="lix" style="background:#404c77">G</span><span><span class="lt">Genomics</span><span class="ld">Clinical-grade exome, 6,000 genes, participant-level variants</span></span></button>
+      <button class="layer" data-k="ehr"><span class="lix" style="background:#228228">E</span><span><span class="lt">EHR</span><span class="ld">Diagnoses, lab results and medications over time</span></span></button>
+      <button class="layer" data-k="claims"><span class="lix" style="background:#3a8ea0">C</span><span><span class="lt">Claims</span><span class="ld">Utilization signals beyond a single health system</span></span></button>
+      <button class="layer" data-k="notes"><span class="lix" style="background:#d43c66">N</span><span><span class="lt">Unstructured data</span><span class="ld">Free-text clinical notes</span></span><span class="badge">New</span></button>
+    </div>
+    <div class="cg-vis">
+      <svg class="orbit" id="orbit" viewBox="0 0 360 300" role="img" aria-label="Clinico-genomic record linking genomics, EHR, claims and clinical notes">
+        <g id="orbitLinks"></g><g id="orbitNodes"></g>
+        <g class="ocenter"><circle cx="180" cy="150" r="46"></circle><text x="180" y="146" font-size="12">Clinico-</text><text x="180" y="160" font-size="12">genomic</text></g>
+      </svg>
+      <div class="cap"><div class="ct" id="cgTitle">Genomics</div><div class="cd" id="cgDesc">Clinical-grade exome across 6,000 genes.</div></div>
+    </div>
+  </div>
+</div></section>
+
+<section class="sec" id="longitudinal"><div class="wrap">
+  <div class="sec-tag">The longitudinal record</div>
+  <h2>Clinical data, linked over time.</h2>
+  <p class="lede">Every HRN participant carries the potential for linked health records across four kinds of clinical data. Depth varies by participant.</p>
+  <div class="ln">
+    <div class="domains" id="domains">
+      <button class="dom" data-k="dx" aria-current="true"><span class="ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M4 5h16M4 12h16M4 19h10" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg></span><span><span class="dt">Diagnoses</span><span class="dd">ICD-10 coded conditions with timing</span></span></button>
+      <button class="dom" data-k="labs"><span class="ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M4 18L9 11l4 4 7-9" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span><span class="dt">Lab results</span><span class="dd">Serial quantitative measurements</span></span></button>
+      <button class="dom" data-k="meds"><span class="ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M9 3h6M12 3v6l5 9a2 2 0 01-1.8 3H8.8A2 2 0 017 18l5-9" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span><span class="dt">Medications</span><span class="dd">RxNorm prescribing and exposure</span></span></button>
+      <button class="dom" data-k="notes"><span class="ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M6 3h9l5 5v13a1 1 0 01-1 1H6a1 1 0 01-1-1V4a1 1 0 011-1zM9 12h7M9 16h7" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span><span class="dt">Clinical notes</span><span class="dd">Unstructured free-text records</span></span></button>
+    </div>
+    <div class="ln-preview" id="lnPreview" aria-live="polite"></div>
+  </div>
+</div></section>
+
+<section class="sec alt" id="genomics"><div class="wrap">
+  <div class="sec-tag">Genome meets clinic</div>
+  <h2>Pathogenic variants, attached to real patients.</h2>
+  <p class="lede">The value is in the link. For each gene, GenoSphere holds the participants carrying pathogenic or likely-pathogenic variants and the clinical cohort they map to. Pathogenicity follows non-conflicting ClinVar assertions. Figures as of 15 May 2026.</p>
+  <div class="linkage" id="linkage"></div>
+</div></section>
+
+<section class="sec explorer" id="explorer"><div class="wrap">
+  <div class="exp-card">
+    <div><div class="sec-tag" style="color:#bfe6c2">Where you work with it</div>
+      <h3>Analyze GenoSphere in Explorer.</h3>
+      <p>Explorer is the secure workspace for GenoSphere. Build cohorts, test hypotheses, and run analyses against the full dataset without the data ever leaving its environment. Watch the demo.</p>
+      <a class="btn btn-pri" href="https://helix-whole-picture.lovable.app/explorer/alt2">Open Explorer</a></div>
+    <div class="exp-video" id="expVideo" role="button" tabindex="0" aria-label="Play the Explorer demo">
+      <div class="poster"></div>
+      <div class="play" aria-hidden="true"><svg width="24" height="24" viewBox="0 0 24 24" fill="#fff"><path d="M8 5v14l11-7z"/></svg></div>
+      <div class="vlabel">Explorer demo</div>
+    </div>
+  </div>
+</div></section>
+
+<section class="sec" id="resources"><div class="wrap">
+  <div class="sec-tag">Go deeper</div><h2>Resources.</h2>
+  <p class="lede">Reading, stories, and sessions on how teams put GenoSphere to work.</p>
+  <div class="res" id="resCards"></div>
+</div></section>
+
+<section class="cta" id="contact"><div class="wrap">
+  <h2>Put real-world genomics to work.</h2>
+  <p>Tell us the question you are trying to answer. We will help you scope the cohort and the access that fits.</p>
+  <div class="cta-actions"><a class="btn btn-pri" href="mailto:mcp@helix.com?subject=GenoSphere">Connect with us</a><a class="btn btn-ghost" href="mailto:mcp@helix.com?subject=GenoSphere%20briefing">Talk to the team</a></div>
+</div></section>
+
+<footer><div class="wrap">
+  <div class="prov"><b>About these figures.</b> Participant counts reflect HRN-enrolled records only and exclude Anuva. "Linked EHR" describes potential coverage: Helix holds research rights for HRN participants, and actual depth varies. Ancestry is reported by group name only. Small counts are shown as "fewer than the reporting threshold" to protect privacy. Variant figures are as of 15 May 2026; the therapeutic-area export is dated 12 October 2026. For licensing or access, contact <a href="mailto:mcp@helix.com">mcp@helix.com</a>.</div>
+  <div class="cpy">&copy; 2026 Helix, Inc. All rights reserved.</div>
+</div></footer>
+
+<div class="drawer-scrim" id="scrim" onclick="closeDrawer()"></div>
+<aside class="drawer" id="drawer" role="dialog" aria-modal="true" aria-labelledby="drawerName">
+  <div class="drawer-top"><button class="drawer-close" onclick="closeDrawer()" aria-label="Close">&times;</button>
+    <div class="d-area" id="drawerArea"></div><h3 id="drawerName"></h3></div>
+  <div class="drawer-body" id="drawerBody"></div>
+</aside>
+<div id="tip" role="tooltip"></div>
+
+<script src="app.js"></script>
+</body>
+</html>
