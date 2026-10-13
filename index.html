@@ -4,10 +4,10 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>GenoSphere | Helix Life Sciences</title>
-<meta name="description" content="GenoSphere is Helix's real-world clinico-genomic dataset: clinical-grade exomes linked to longitudinal health records across 560,000+ participants.">
+<meta name="description" content="GenoSphere is Helix's real-world clinicogenomic dataset: clinical-grade exomes linked to longitudinal health records across 560,000+ participants.">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@400;700;900&family=Mulish:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="styles.css">
+<link rel="stylesheet" href="styles.css?v=2">
 </head>
 <body>
 <header class="nav"><div class="nav-inner">
@@ -22,10 +22,10 @@
 <section class="hero" id="top">
   <canvas id="net" aria-hidden="true"></canvas>
   <div class="wrap"><div class="hero-copy">
-    <span class="live"><span class="dot" aria-hidden="true"></span>Clinico-genomic data at population scale</span>
+    <span class="live"><span class="dot" aria-hidden="true"></span>Clinicogenomic data at population scale</span>
     <h1>See the genome and the <span class="thin">clinic together.</span></h1>
-    <p class="hero-lede">GenoSphere is Helix's real-world <b>clinico-genomic</b> dataset: clinical-grade exomes from more than 560,000 consented participants, linked to their longitudinal electronic health records.</p>
-    <p class="hero-lede">Clinico-genomic data pairs each person's genome with their real-world clinical journey, the diagnoses, lab trends, medications, and notes that accumulate over years, so you can move from a genetic signal to its clinical consequence inside a single dataset.</p>
+    <p class="hero-lede">GenoSphere is Helix's real-world <b>clinicogenomic</b> dataset: clinical-grade exomes from more than 560,000 consented participants, linked to their longitudinal electronic health records.</p>
+    <p class="hero-lede">Clinicogenomic data pairs each person's genome with their real-world clinical journey, the diagnoses, lab trends, medications, and notes that accumulate over years, so you can move from a genetic signal to its clinical consequence inside a single dataset.</p>
     <div class="hero-actions"><a class="btn btn-pri" href="#contact">Connect with us</a><a class="btn btn-ghost" href="#landscape">Explore the landscape</a></div>
   </div></div>
   <a class="hero-scroll" href="#data" aria-label="Scroll down"><span>Explore</span><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
@@ -48,7 +48,7 @@
 <section class="sec landscape" id="landscape"><div class="wrap">
   <div class="ls-head">
     <div><div class="sec-tag">Explore the dataset</div><h2>The therapeutic-area landscape.</h2>
-      <p class="lede">GenoSphere at the center. Click a therapeutic area, then a specialty, to open its conditions as a web. Select any disease for its clinico-genomic detail.</p></div>
+      <p class="lede">GenoSphere at the center. Click a therapeutic area, then a specialty, to open its conditions as a web. Select any disease for its clinicogenomic detail.</p></div>
     <div class="ls-controls">
       <input class="map-search" id="mapSearch" type="search" placeholder="Find a condition" aria-label="Search conditions">
       <div class="seg" role="group" aria-label="View"><button id="viewMap" aria-pressed="true" onclick="setView('map')">Web</button><button id="viewBars" aria-pressed="false" onclick="setView('bars')">Ranked</button></div>
@@ -89,8 +89,8 @@
 
 <section class="sec alt" id="model"><div class="wrap">
   <div class="sec-tag">What GenoSphere is</div>
-  <h2>Clinico-genomic data, four layers deep.</h2>
-  <p class="lede">GenoSphere links each participant's genome to the real-world evidence that surrounds it. Together they form a clinico-genomic record: genetics read alongside the clinical life it plays out in.</p>
+  <h2>Clinicogenomic data, four layers deep.</h2>
+  <p class="lede">GenoSphere links each participant's genome to the real-world evidence that surrounds it. Together they form a clinicogenomic record: genetics read alongside the clinical life it plays out in.</p>
   <div class="cg">
     <div class="cg-layers" id="cgLayers">
       <button class="layer" data-k="genomics" aria-current="true"><span class="lix" style="background:#404c77">G</span><span><span class="lt">Genomics</span><span class="ld">Clinical-grade exome, 6,000 genes, participant-level variants</span></span></button>
@@ -99,9 +99,9 @@
       <button class="layer" data-k="notes"><span class="lix" style="background:#d43c66">N</span><span><span class="lt">Unstructured data</span><span class="ld">Free-text clinical notes</span></span><span class="badge">New</span></button>
     </div>
     <div class="cg-vis">
-      <svg class="orbit" id="orbit" viewBox="0 0 360 300" role="img" aria-label="Clinico-genomic record linking genomics, EHR, claims and clinical notes">
+      <svg class="orbit" id="orbit" viewBox="0 0 360 300" role="img" aria-label="Clinicogenomic record linking genomics, EHR, claims and clinical notes">
         <g id="orbitLinks"></g><g id="orbitNodes"></g>
-        <g class="ocenter"><circle cx="180" cy="150" r="46"></circle><text x="180" y="146" font-size="12">Clinico-</text><text x="180" y="160" font-size="12">genomic</text></g>
+        <g class="ocenter"><circle cx="180" cy="150" r="46"></circle><text x="180" y="154" font-size="10.5">Clinicogenomic</text></g>
       </svg>
       <div class="cap"><div class="ct" id="cgTitle">Genomics</div><div class="cd" id="cgDesc">Clinical-grade exome across 6,000 genes.</div></div>
     </div>
@@ -169,6 +169,6 @@
 </aside>
 <div id="tip" role="tooltip"></div>
 
-<script src="app.js"></script>
+<script src="app.js?v=2"></script>
 </body>
 </html>
